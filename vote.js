@@ -1,6 +1,8 @@
 import { CONFIG } from './config.js';
 
-const resultEl = document.getElementById('result');
+const tableBody = document.getElementById('resultTableBody');
+const totalSuaraEl = document.getElementById('totalSuara');
+
 let votes = {};
 let candidates = [];
 let hasVoted = false;
@@ -81,42 +83,79 @@ function enableAllButtons() {
 function renderResult() {
   let total = 0;
   let maxVotes = 0;
-  let winners = [];
 
   candidates.forEach(c => {
     const count = votes[c.id] || 0;
     total += count;
     if (count > maxVotes) {
       maxVotes = count;
-      winners = [c.id];
-    } else if (count === maxVotes && count > 0) {
-      winners.push(c.id);
     }
   });
 
-  if (total === 0) {
-    resultEl.textContent = 'Belum ada suara masuk. Silakan pilih kandidat (kecuali diri sendiri).';
-    resultEl.style.color = '#4a5568';
-    return;
-  }
+  tableBody.textContent = '';
 
-  const names = winners.map(id => {
-    const c = candidates.find(c => c.id === id);
-    return c ? c.name : '?';
+  candidates.forEach((c, idx) => {
+    const isYou = c.name === CONFIG.YOUR_NAME;
+    const count = votes[c.id] || 0;
+    const pct = total > 0 ? ((count / total) * 100).toFixed(1) : '0.0';
+
+    const tr = document.createElement('tr');
+    
+    // Highlight leader row if votes exist
+    const isLeader = total > 0 && count === maxVotes;
+    if (isLeader) {
+      tr.className = 'leader-row';
+    }
+
+    // Col 1: No
+    const tdNo = document.createElement('td');
+    tdNo.textContent = String(idx + 1);
+    tr.appendChild(tdNo);
+
+    // Col 2: Kandidat
+    const tdName = document.createElement('td');
+    tdName.textContent = c.name;
+    if (isLeader) {
+      const badge = document.createElement('span');
+      badge.className = 'leader-badge';
+      badge.textContent = ' 🏆';
+      tdName.appendChild(badge);
+    }
+    tr.appendChild(tdName);
+
+    // Col 3: Suara
+    const tdVotes = document.createElement('td');
+    tdVotes.className = 'text-right';
+    tdVotes.textContent = isYou ? '—' : String(count);
+    tr.appendChild(tdVotes);
+
+    // Col 4: Persentase (with micro progress bar under)
+    const tdPct = document.createElement('td');
+    tdPct.className = 'text-right';
+    
+    if (isYou) {
+      tdPct.textContent = '—';
+    } else {
+      const textSpan = document.createElement('span');
+      textSpan.textContent = pct + '%';
+      tdPct.appendChild(textSpan);
+
+      const progCont = document.createElement('div');
+      progCont.className = 'progress-container';
+      
+      const progBar = document.createElement('div');
+      progBar.className = 'progress-bar';
+      progBar.style.width = pct + '%';
+      
+      progCont.appendChild(progBar);
+      tdPct.appendChild(progCont);
+    }
+    
+    tr.appendChild(tdPct);
+    tableBody.appendChild(tr);
   });
 
-  const leader = names.length > 1
-    ? 'Seri antara ' + names.join(' dan ')
-    : 'Pemimpin: ' + names[0];
-
-  resultEl.textContent = '';
-  const strong = document.createElement('strong');
-  strong.textContent = '📊 Hasil sementara: ';
-  resultEl.appendChild(strong);
-  resultEl.appendChild(document.createTextNode(
-    'Total suara: ' + total + ' | ' + leader + ' (' + maxVotes + ' suara)'
-  ));
-  resultEl.style.color = '#2d3748';
+  totalSuaraEl.textContent = 'Total suara masuk: ' + total;
 }
 
 export function getHasVoted() {

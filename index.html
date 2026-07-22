@@ -12,8 +12,26 @@
         <p class="subtitle">Pilih salah satu kandidat di bawah ini</p>
 
         <div id="candidateContainer" class="candidate-list"></div>
-        <div id="result"></div>
-        <button id="resetVotes" class="reset-btn" type="button">Reset suara</button>
+        
+        <!-- Hasil Voting Section -->
+        <div class="result-section">
+            <h2>📊 Hasil Voting</h2>
+            <div class="table-container">
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kandidat</th>
+                            <th class="text-right">Suara</th>
+                            <th class="text-right">Persentase</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultTableBody"></tbody>
+                </table>
+            </div>
+            <div id="totalSuara" class="total-suara">Total suara: 0</div>
+            <button id="resetVotes" class="reset-btn" type="button">Reset suara</button>
+        </div>
 
         <div class="info-box">
             <strong>⚠️ Perhatian:</strong>

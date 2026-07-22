@@ -150,6 +150,97 @@ h1 {
 }
 
 /* ========== Info & Result ========== */
+.result-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px dashed #e2e8f0;
+}
+
+.result-section h2 {
+    font-size: 20px;
+    color: #2d3748;
+    margin-bottom: 16px;
+}
+
+.table-container {
+    overflow-x: auto;
+    background: white;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-card);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 16px;
+}
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.result-table th, 
+.result-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.result-table th {
+    background-color: #f7fafc;
+    font-weight: 600;
+    color: #4a5568;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+}
+
+.result-table tr:last-child td {
+    border-bottom: none;
+}
+
+.result-table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.result-table tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.progress-container {
+    width: 100%;
+    background: #edf2f7;
+    border-radius: 999px;
+    height: 6px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--green);
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.leader-row td {
+    background-color: #f0fff4;
+    font-weight: 600;
+}
+
+.leader-badge {
+    margin-left: 6px;
+    font-size: 14px;
+}
+
+.total-suara {
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 10px;
+}
+
 .info-box {
     background: #ebf8ff;
     border-left: 6px solid #3182ce;
