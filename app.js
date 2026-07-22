@@ -94,6 +94,7 @@ function render() {
       EscapeButton.init(btn);
     } else {
       btn.addEventListener('click', () => {
+        if (Vote.getHasVoted()) return;
         if (getModalActive()) return;
         show('Anda yakin memilih "' + c.name + '"?', c.id);
       });
