@@ -9,19 +9,27 @@ function load() {
   try {
     const saved = localStorage.getItem(CONFIG.STORAGE_KEY);
     if (saved) votes = JSON.parse(saved);
-    
-    // Check if device already voted
     hasVoted = localStorage.getItem(CONFIG.STORAGE_KEY + '_voted') === 'true';
-  } catch (_) { votes = {}; }
+  } catch (_) {
+    votes = {};
+    hasVoted = false;
+  }
 }
 
 function save() {
-  try { 
-    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(votes)); 
-    if (hasVoted) {
-      localStorage.setItem(CONFIG.STORAGE_KEY + '_voted', 'true');
-    }
+  try {
+    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(votes));
+    localStorage.setItem(CONFIG.STORAGE_KEY + '_voted', hasVoted ? 'true' : 'false');
   } catch (_) {}
+}
+
+function reset() {
+  votes = {};
+  candidates.forEach(c => { votes[c.id] = 0; });
+  hasVoted = false;
+  save();
+  renderResult();
+  enableAllButtons();
 }
 
 function cast(id) {
@@ -30,48 +38,60 @@ function cast(id) {
   hasVoted = true;
   save();
   renderResult();
-  disableAllButtons();
-  flash(id);
+  disableAllButtons(id);
 }
 
 function init(cand) {
   candidates = cand;
   load();
-  candidates.forEach(c => { if (votes[c.id] === undefined) votes[c.id] = 0; });
+  candidates.forEach(c => {
+    if (votes[c.id] === undefined) votes[c.id] = 0;
+  });
   renderResult();
-  if (hasVoted) {
-    disableAllButtons();
-  }
+  if (hasVoted) disableAllButtons();
 }
 
-function disableAllButtons() {
+function disableAllButtons(selectedId) {
   const sel = document.querySelectorAll('.vote-btn:not(.evasive)');
   for (const btn of sel) {
     btn.disabled = true;
     btn.style.opacity = '0.6';
     btn.style.cursor = 'not-allowed';
-    btn.textContent = 'Sudah Memilih';
-  }
-}
-
-function flash(id) {
-  const sel = document.querySelectorAll('.vote-btn:not(.evasive)');
-  for (const btn of sel) {
-    if (parseInt(btn.dataset.id) === id) {
+    if (selectedId && parseInt(btn.dataset.id) === selectedId) {
       btn.textContent = '✓ Terpilih!';
       btn.style.background = '#38a169';
-      break; // keep status "Terpilih" permanently since voting is final
+    } else {
+      btn.textContent = 'Sudah Memilih';
+      btn.style.background = '';
     }
   }
 }
 
+function enableAllButtons() {
+  const sel = document.querySelectorAll('.vote-btn:not(.evasive)');
+  for (const btn of sel) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    btn.textContent = 'Pilih';
+    btn.style.background = '';
+  }
+}
+
 function renderResult() {
-  let total = 0, maxVotes = 0, winners = [];
+  let total = 0;
+  let maxVotes = 0;
+  let winners = [];
+
   candidates.forEach(c => {
     const count = votes[c.id] || 0;
     total += count;
-    if (count > maxVotes) { maxVotes = count; winners = [c.id]; }
-    else if (count === maxVotes && count > 0) { winners.push(c.id); }
+    if (count > maxVotes) {
+      maxVotes = count;
+      winners = [c.id];
+    } else if (count === maxVotes && count > 0) {
+      winners.push(c.id);
+    }
   });
 
   if (total === 0) {
@@ -84,6 +104,7 @@ function renderResult() {
     const c = candidates.find(c => c.id === id);
     return c ? c.name : '?';
   });
+
   const leader = names.length > 1
     ? 'Seri antara ' + names.join(' dan ')
     : 'Pemimpin: ' + names[0];
@@ -98,5 +119,8 @@ function renderResult() {
   resultEl.style.color = '#2d3748';
 }
 
-export function getHasVoted() { return hasVoted; }
-export { init, cast, renderResult };
+export function getHasVoted() {
+  return hasVoted;
+}
+
+export { init, cast, reset, renderResult };

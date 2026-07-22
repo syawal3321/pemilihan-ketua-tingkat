@@ -60,6 +60,13 @@ function getModalActive() { return active; }
 Vote.init(CONFIG.CANDIDATES);
 initModal((id) => Vote.cast(id));
 
+const resetBtn = document.getElementById('resetVotes');
+if (resetBtn) {
+  resetBtn.addEventListener('click', () => {
+    Vote.reset();
+  });
+}
+
 function render() {
   container.innerHTML = '';
   CONFIG.CANDIDATES.forEach(c => {
