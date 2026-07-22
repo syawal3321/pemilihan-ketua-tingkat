@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pemilihan Ketua Tingkat</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>🗳️ Pemilihan Ketua Tingkat</h1>
+        <p class="subtitle">Pilih salah satu kandidat di bawah ini</p>
+
+        <div id="candidateContainer" class="candidate-list"></div>
+        <div id="result"></div>
+
+        <div class="info-box">
+            <strong>⚠️ Perhatian:</strong>
+            Nama "<span id="yourNameDisplay"></span>" wajib masuk nominasi, tetapi tombolnya <strong>akan menghindar</strong> jika Anda mencoba mengklik atau mengarahkan kursor ke sana. Ini murni simulasi teknis, bukan untuk pemilu sesungguhnya.
+        </div>
+        <div class="footer">Dibuat untuk keperluan demo interaksi</div>
+    </div>
+
+    <!-- Modal Konfirmasi -->
+    <div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-box">
+            <h3 id="modalTitle">Konfirmasi Pilihan</h3>
+            <p id="modalMessage">Anda yakin memilih "Nama"?</p>
+            <div class="btn-group">
+                <button class="btn-yes" id="modalYes">Ya</button>
+                <button class="btn-no" id="modalNo">Tidak</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
